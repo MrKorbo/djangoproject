@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block titulo %} Crear Detalle de Orden {% endblock %}
+{% block body %}
+<form action="">
+    <div class="card">
+        <div class="card-header">
+            <h1>Tabla de Datos</h1>
+        </div>
+        <div class="card-body">
+            <button id="agregarFila" class="display btn btn-primary">Agregar Fila</button>    <!-- Botón para agregar una fila -->
+        </div>
+    </div><br>
+
+    <table id="miTabla" class="table table-striped-columns"> <!-- Tabla DataTables -->
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Orden</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se mostrarán las filas de datos -->
+        </tbody>
+    </table>
+
+    <!-- Campo oculto para guardar el número de filas -->
+    <input type="hidden" id="numeroFilas" name="numero_filas" value="0"><br>
+    
+    <!-- Botón para guardar datos en la base de datos -->
+    <input type="submit" class="btn btn-success" value="Guardar">
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#miTabla').DataTable({
+                "paging": false,
+                "searching": false
+            });
+
+            // Agregar una fila al hacer clic en el botón "Agregar Fila"
+            $('#agregarFila').on('click', function() {
+                table.row.add(['Nuevo Producto', 'Nueva Cantidad', 'Nueva Orden', '<button class="eliminarFila btn btn-danger">Eliminar</button>']).draw();
+            });
+
+            // Eliminar una fila al hacer clic en el botón "Eliminar"
+            $('#miTabla tbody').on('click', '.eliminarFila', function() {
+                table.row($(this).parents('tr')).remove().draw();
+            });
+
+            // Manejar el envío del formulario para guardar datos
+            $('#miFormulario').on('submit', function(event) {
+                event.preventDefault(); // Evitar el envío predeterminado del formulario
+
+                // Obtener todas las filas de la tabla
+                var filas = table.rows().data().toArray();
+
+                // Actualizar el valor del campo oculto con el número de filas
+                $('#numeroFilas').val(filas.length);
+
+                // Enviar los datos del formulario al servidor
+                $.ajax({
+                    url: $('/guardar_datos/').attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Procesar la respuesta del servidor si es necesario
+                    },
+                    error: function() {
+                        // Manejar errores si es necesario
+                    }
+                });
+            });
+        });
+    </script>
+</form>
+
+{% endblock %}
