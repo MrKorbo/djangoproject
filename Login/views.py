@@ -42,7 +42,7 @@ class crear_detalle_orden(LoginRequiredMixin, TemplateView):
         else:
             form = DetalleOrdenForm()
 
-        return render(request, 'crear_detalle_orden.html', {'form': form})
+        return render(request, 'productos/crear_detalle_orden.html', {'form': form})
 
 #=========================================================================================================================
 def guardar_datos(request):

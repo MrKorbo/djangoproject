@@ -28,13 +28,13 @@ class producto(models.Model):
     nombre = models.CharField(max_length=100)
     categoria = models.ForeignKey(categoria, on_delete=models.CASCADE, null=True)
     stock = models.PositiveIntegerField() 
-    #fecha_creacion = models.DateTimeField(auto_now_add=True) // Se retira fecha de creacion ya que esto debe ser contenido por orden
+    #fecha_creacion = models.DateTimeField(auto_now_add=True) # Se retira fecha de creacion ya que esto debe ser contenido por orden
     
     def __str__(self):
         return self.nombre
     
 class tipo(models.Model):
-    nombre = models.CharField(max_length=100)
+    estado = models.IntegerField()
 
     def __str__(self):
         return self.nombre

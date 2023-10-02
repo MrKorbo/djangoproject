@@ -2,16 +2,20 @@
 {% block titulo %} Crear Detalle de Orden {% endblock %}
 {% block body %}
 <form action="">
+    {% csrf_token %}
+    {{ form.as_p }}
     <div class="card">
         <div class="card-header">
             <h1>Tabla de Datos</h1>
         </div>
         <div class="card-body">
-            <button id="agregarFila" class="display btn btn-primary">Agregar Fila</button>    <!-- Botón para agregar una fila -->
+            <button type="button" id="agregarFila" class="display btn btn-primary">Agregar Fila</button>    <!-- Botón para agregar una fila -->
+            <!-- Botón para guardar datos en la base de datos -->
+            <input type="submit" class="btn btn-success" value="Guardar">
         </div>
     </div><br>
 
-    <table id="miTabla" class="table table-striped-columns"> <!-- Tabla DataTables -->
+    <table id="miTabla" class="table table-striped"> <!-- Tabla DataTables -->
         <thead>
             <tr>
                 <th>Producto</th>
@@ -21,16 +25,16 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Aquí se mostrarán las filas de datos -->
+            <td><input type="text" class="form-control" name="producto" placeholder="Seleccione Producto"></td>
+            <td><input type="number" class="form-control" name="cantidad" placeholder="Cantidad"></td>
+            <td><input type="text" class="form-control" name="orden" placeholder="Seleccione Orden"></td>
+            <td><button class="eliminarFila btn btn-danger">Eliminar</button></td>            
         </tbody>
     </table>
 
     <!-- Campo oculto para guardar el número de filas -->
     <input type="hidden" id="numeroFilas" name="numero_filas" value="0"><br>
     
-    <!-- Botón para guardar datos en la base de datos -->
-    <input type="submit" class="btn btn-success" value="Guardar">
-
     <script>
         $(document).ready(function() {
             var table = $('#miTabla').DataTable({
@@ -40,7 +44,12 @@
 
             // Agregar una fila al hacer clic en el botón "Agregar Fila"
             $('#agregarFila').on('click', function() {
-                table.row.add(['Nuevo Producto', 'Nueva Cantidad', 'Nueva Orden', '<button class="eliminarFila btn btn-danger">Eliminar</button>']).draw();
+                table.row.add([
+                '<input type="text" class="form-control" name="producto" placeholder="Seleccione Producto">', 
+                '<input type="number" class="form-control" name="cantidad" placeholder="Cantidad">',
+                '<input type="text" class="form-control" name="orden" placeholder="Seleccione Orden">', 
+                '<button class="eliminarFila btn btn-danger">Eliminar</button>'])
+                .draw();
             });
 
             // Eliminar una fila al hacer clic en el botón "Eliminar"
