@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block titulo %} Crear Detalle de Orden {% endblock %}
+{% block body %}
+<form id="miFormulario" method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="card">
+        <div class="card-header">
+            <h1>Tabla de Datos</h1>
+        </div>
+        <div class="card-body">
+            <button type="button" id="agregarFila" class="display btn btn-outline-primary">Agregar Fila</button>    <!-- Botón para agregar una fila -->
+            <!-- Botón para guardar datos en la base de datos -->
+            <!-- <input type="submit" class="btn btn-success" value="Guardar" >-->
+            <button type="submit" class="btn btn-success" onclick=guardar_formulario();>Guardar</button>
+        </div>
+    </div><br>
+
+    <table id="miTabla" class="table table-striped"> <!-- Tabla DataTables -->
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--<td>
+                <select class="form-select" id="id_producto" name="producto" aria-label="Default select example">
+                    <option value="">Selecciona un producto</option>
+                    {% for pro in productos %}
+                        <option value="{{ pro.id }}">{{ pro.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="cantidad" placeholder="Cantidad">
+            </td>
+            <td>
+                <button class="eliminarFila btn btn-danger">Eliminar</button>
+            </td>-->
+        </tbody>
+
+
+
+    <!-- Campo oculto para guardar el número de filas -->
+    <input type="hidden" id="numeroFilas" name="numeroFilas" value="0">
+    <input type="hidden" id="tipoOrden" name="tipoOrden" value="1">
+    <input type="hidden" id="id_orden" name="id_orden" value="2">
+
+</form>
+    
+<script>
+    function guardar_formulario() {
+        console.log("iniciando");
+    }
+    $(document).ready(function() {
+        var table = $('#miTabla').DataTable({
+            "paging": false,
+            "searching": false
+        });
+        // Agregar una fila al hacer clic en el botón "Agregar Fila"
+        $('#agregarFila').on('click', function() {
+            var opciones = 
+                '<select id="items[]" name="items[]" class="form-select" aria-label="Default select example">  '  + 
+                '   <option value="">Selecciona un producto</option>  '  + 
+                '   {% for pro in productos %}  '  + 
+                '       <option value="{{ pro.id }}">{{ pro.nombre }}</option>  '  + 
+                '   {% endfor %}  '  + 
+                '</select>'  ;
+            table.row.add([
+                opciones,
+                '<input type="number" class="form-control" id="items[]" name="items[]" placeholder="Cantidad">',
+                '<button class="eliminarFila btn btn-danger">Eliminar</button>'
+            ]).draw();                
+        })
+        $('#agregarFila').click();
+        // Eliminar una fila al hacer clic en el botón "Eliminar"
+        $('#miTabla tbody').on('click', '.eliminarFila', function() {
+            table.row($(this).parents('tr')).remove().draw();
+        });
+        // Manejar el envío del formulario para guardar datos
+        $('#miFormulario').on('submit', function(event) {
+            event.preventDefault(); // Evitar el envío predeterminado del formulario
+            // Obtener todas las filas de la tabla
+            var filas = table.rows().data().toArray();
+            // Actualizar el valor del campo oculto con el número de filas
+            $('#numeroFilas').val(filas.length);
+            // Enviar los datos del formulario al servidor
+            var datax = {
+            fecha: '',
+            receptor: null,
+            tipo: '1',
+        };
+        // Realizar una solicitud AJAX para obtener los datos del modelo orden
+        $.ajax({
+            url: "{% url 'insertarDato' %}",  // Reemplaza 'url_para_obtener_datos_de_orden' con la URL correcta
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(datax),
+            success: function(response) {
+                $('#resultado').html(response.mensaje);
+    
+                // Acceder al ID del nuevo objeto
+                var nuevoId = response.id;
+                        
+                // Hacer algo con el ID, como mostrarlo en la página
+                //$('#nuevoId').html('ID del nuevo objeto: ' + nuevoId);
+                console.log(nuevoId);
+                $.ajax({
+                    url: "{% url 'insertarDato' %}",  // Reemplaza 'url_para_obtener_datos_de_orden' con la URL correcta
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Procesar la respuesta del servidor si es necesario
+                    },
+                    error: function() {
+                        // Manejar errores si es necesario
+                    }
+                });
+            },
+            error: function(error) {
+                console.error('Error en la solicitud AJAX:', error.responseJSON);
+                $('#resultado').html('Error al insertar dato: ' + error.responseJSON.error);
+            }
+        });
+                
+            });
+        });
+</script>
+{% endblock %}

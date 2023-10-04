@@ -15,7 +15,6 @@
                     <th>Nombre</th>
                     <th>Categoria</th>
                     <th>Stock</th>
-                    <th>Fecha</th>
                     <th>Accion</th>
                 </tr>
             </thead>  
@@ -26,7 +25,6 @@
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.categoria }}</td>
                     <td>{{ producto.stock }}</td>
-                    <td>{{ producto.fecha_creacion }}</td>
                     <td> 
                         <a href="{% url 'editar' producto.id %}" id="" class="btn btn-info" role="button">Editar</a> 
                         | 

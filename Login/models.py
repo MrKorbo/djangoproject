@@ -28,27 +28,21 @@ class producto(models.Model):
     nombre = models.CharField(max_length=100)
     categoria = models.ForeignKey(categoria, on_delete=models.CASCADE, null=True)
     stock = models.PositiveIntegerField() 
-    #fecha_creacion = models.DateTimeField(auto_now_add=True) # Se retira fecha de creacion ya que esto debe ser contenido por orden
-    
-    def __str__(self):
-        return self.nombre
-    
-class tipo(models.Model):
-    estado = models.IntegerField()
 
     def __str__(self):
         return self.nombre
 
 class orden(models.Model):
+    class tipo_orden(models.IntegerChoices):
+        Entrada = 1
+        Salida = 2
     id = models.AutoField(primary_key=True)
     fecha = models.DateTimeField(auto_now_add=True)
     receptor = models.TextField(null=True)
-    tipo = models.ForeignKey(tipo, on_delete=models.CASCADE, null=True)
+    tipo = models.IntegerField(choices=tipo_orden.choices)
     
 class detalle_orden(models.Model):
     id = models.AutoField(primary_key=True)
     cantidad = models.PositiveIntegerField(default=0)
-    producto = models.ForeignKey(producto, on_delete=models.CASCADE, null=True)
     orden = models.ForeignKey(orden, on_delete=models.CASCADE, null=True)
-
-
+    producto = models.ForeignKey(producto, on_delete=models.CASCADE, null=True)
