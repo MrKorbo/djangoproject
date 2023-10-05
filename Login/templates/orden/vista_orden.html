@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block titulo %} Vista Detalle {% endblock %}
+{% block body %}
+
+
+    
+<!-- llamar la id del orden que se encuentra en detalle_orden 
+
+mostrar todos los producto que compartan la misma id de orden-->
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="container overflow-hidden">
+            <div class="row gx-5">
+                <div class="col">
+                    <div>
+                        <h3>
+                            Detalle de la Orden
+                        </h3>
+                    </div>
+                </div>
+                <div class="col text-center">
+                    <div>
+                        Fecha
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id Producto</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>  
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+
+{% endblock %}

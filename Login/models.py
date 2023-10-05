@@ -47,8 +47,14 @@ class orden(models.Model):
     
 class detalle_orden(models.Model):
     id = models.AutoField(primary_key=True)
+<<<<<<< Updated upstream
     cantidad = models.PositiveIntegerField(default=0)
     producto = models.ForeignKey(producto, on_delete=models.CASCADE, null=True)
     orden = models.ForeignKey(orden, on_delete=models.CASCADE, null=True)
 
 
+=======
+    cantidad = models.PositiveIntegerField()
+    orden = models.PositiveIntegerField()
+    producto = models.PositiveIntegerField()
+>>>>>>> Stashed changes

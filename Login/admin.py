@@ -6,5 +6,4 @@ admin.site.register(user)
 admin.site.register(categoria)
 admin.site.register(producto)
 
-admin.site.register(detalle_orden)
 admin.site.register(orden)

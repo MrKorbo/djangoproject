@@ -1,3 +1,5 @@
+from typing import Any
+from django import http
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.views import LoginView, LogoutView
@@ -44,6 +46,7 @@ class crear_detalle_orden(LoginRequiredMixin, TemplateView):
 
         return render(request, 'productos/crear_detalle_orden.html', {'form': form})
 
+<<<<<<< Updated upstream
 #=========================================================================================================================
 def guardar_datos(request):
     if request.method == 'POST':
@@ -65,6 +68,30 @@ def guardar_datos(request):
 #===========================================================================================================================    
 
 #------------------------------------------------------------------------------------------
+=======
+#--------------------------------------------------------------------------------------------------------------------------
+    
+def mostrar_ordenes(request):
+    ordenes = orden.objects.all()
+    return render(request, 'orden/orden.html', {'mostrarOrdenes': ordenes})
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+class vistaOrden(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('login')
+    template_name = 'orden/vista_orden.html'
+
+    def post(self, request, id_orden):
+        
+        detalle = detalle_orden.objects.filter(orden=id_orden)
+        #visOrden = detalle_orden.objects.all()
+
+        return render(request, 'vista_orden.html', {'detalles': detalle})
+    
+#===========================================================================================================================
+# Productos
+#=========================================================================================================================== 
+>>>>>>> Stashed changes
 
 class Crear(LoginRequiredMixin, TemplateView):
     login_url = 'login'
@@ -94,4 +121,48 @@ def Eliminar(request, id):
     Producto.delete()
     return redirect('producto')
 
+<<<<<<< Updated upstream
 #---------------------------------------------------------------------------------------------
+=======
+#===========================================================================================================================
+# JAVASCRIPT
+#===========================================================================================================================
+
+@csrf_exempt  # Deshabilita la protección CSRF para esta vista (deberías habilitarla adecuadamente en producción)
+def insertar_dato(request):
+    if request.method == 'POST':
+        try:
+            # Obtén los datos del cuerpo de la solicitud POST
+            data = json.loads(request.body)
+            
+            # Realiza la inserción de datos en el modelo (ajusta esto según tus modelos)
+            nuevo_dato = orden(fecha=data['fecha'], receptor=data['receptor'], tipo=data['tipo'])
+            nuevo_dato.save()
+            
+            return JsonResponse({'mensaje': 'Dato insertado correctamente', 'id': nuevo_dato.id})        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)  # Responde con un mensaje de error en caso de problemas
+    else:
+        return JsonResponse({'error': 'Solicitud no válida'}, status=400)  # Responde con un error si la solicitud no es POST
+    
+#--------------------------------------------------------------------------------------------------------------------------
+
+@csrf_exempt  # Deshabilita la protección CSRF para esta vista (deberías habilitarla adecuadamente en producción)
+def guardar_items(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        for item_data in data['productos']:
+                producto_id = item_data['producto']
+                cantidad = item_data['cantidad']
+
+                # Crear un nuevo objeto DetalleOrden y guardarlo en la base de datos
+                detalle = detalle_orden(producto=producto_id, cantidad = cantidad, orden=data.get('id_orden'))
+                detalle.save()
+        
+        return JsonResponse({'mensaje': 'Datos guardados correctamente'})
+    
+    return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
+    
+#===========================================================================================================================
+>>>>>>> Stashed changes

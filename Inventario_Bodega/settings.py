@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'Inventario_Bodega.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sistema_invetario',
+        'NAME': 'proyecto_inventario',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
