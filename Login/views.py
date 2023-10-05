@@ -2,23 +2,35 @@ from typing import Any
 from django import http
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
-from .models import user, producto, categoria, detalle_orden, orden
+from .models import user, producto, detalle_orden, orden
 from .forms import ProductoForm, DetalleOrdenForm
+
+#===========================================================================================================================
+# Vistas
+#=========================================================================================================================== 
 
 class Login(LoginView):
     next_page = reverse_lazy('inicio')
-    template_name = 'vistas/login.html'    
+    template_name = 'vistas/login.html'
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 class Logout(LogoutView):
     next_page = reverse_lazy('login')
 
+#--------------------------------------------------------------------------------------------------------------------------
+
 class Inicio(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
     template_name = 'vistas/inicio.html'
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 class Producto(LoginRequiredMixin, TemplateView):
     login_url = 'login'
@@ -27,48 +39,31 @@ class Producto(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         productos = producto.objects.all() 
         return render(request, self.template_name, {'Producto': productos})
-#==============================================================================================
-def mostrar_detalle_orden(request):
-    detalle_ordenes = detalle_orden.objects.all()
-    return render(request, 'productos/detalle_orden.html', {'detalle_ordenes': detalle_ordenes})
+    
+#===========================================================================================================================
+# Orden
+#=========================================================================================================================== 
 
 class crear_detalle_orden(LoginRequiredMixin, TemplateView):
     login_url = 'login'
-    template_name = 'productos/crear_detalle_orden.html'
+    template_name = 'orden/crear_detalle_orden.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productos'] = producto.objects.all()  # Agrega los productos al contexto
+        return context
+
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             form = DetalleOrdenForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('detalle_orden')
+                return redirect('mostrar_ordenes')
         else:
             form = DetalleOrdenForm()
 
-        return render(request, 'productos/crear_detalle_orden.html', {'form': form})
+        return render(request, 'orden/crear_detalle_orden.html', {'form': form})
 
-<<<<<<< Updated upstream
-#=========================================================================================================================
-def guardar_datos(request):
-    if request.method == 'POST':
-        numero_filas = int(request.POST.get('numero_filas'))
-        
-        for i in range(numero_filas):
-            producto = request.POST.get(f'producto_{i}')
-            cantidad = request.POST.get(f'cantidad_{i}')
-            orden = request.POST.get(f'orden_{i}')
-            
-            # Guardar los datos en la base de datos (modelo correspondiente)
-            # Ejemplo: Crear una nueva instancia y guardarla
-            # modelo = MiModelo(nombre=nombre, edad=edad)
-            # modelo.save()
-        
-        return JsonResponse({'mensaje': 'Datos guardados exitosamente'})  # Respuesta JSON de confirmación
-        
-    return render(request, 'productos/crear_detalle_orden.html') # Si la solicitud no es POST, muestra la página nuevamente
-#===========================================================================================================================    
-
-#------------------------------------------------------------------------------------------
-=======
 #--------------------------------------------------------------------------------------------------------------------------
     
 def mostrar_ordenes(request):
@@ -86,12 +81,11 @@ class vistaOrden(LoginRequiredMixin, TemplateView):
         detalle = detalle_orden.objects.filter(orden=id_orden)
         #visOrden = detalle_orden.objects.all()
 
-        return render(request, 'vista_orden.html', {'detalles': detalle})
+        return render(request, 'vista_orden.html', { 'detalles': detalle})
     
 #===========================================================================================================================
 # Productos
 #=========================================================================================================================== 
->>>>>>> Stashed changes
 
 class Crear(LoginRequiredMixin, TemplateView):
     login_url = 'login'
@@ -103,6 +97,8 @@ class Crear(LoginRequiredMixin, TemplateView):
             return redirect('producto')
         else:
             return render(request, 'productos/crear.html', {'formulario': formulario})
+        
+#--------------------------------------------------------------------------------------------------------------------------
         
 def Editar(request, id):
     producto_editar = producto.objects.get(id=id)
@@ -116,14 +112,13 @@ def Editar(request, id):
 
     return render(request, 'productos/editar.html', {'formulario': formulario})
 
+#--------------------------------------------------------------------------------------------------------------------------
+
 def Eliminar(request, id):
     Producto=producto.objects.get(id=id)
     Producto.delete()
     return redirect('producto')
 
-<<<<<<< Updated upstream
-#---------------------------------------------------------------------------------------------
-=======
 #===========================================================================================================================
 # JAVASCRIPT
 #===========================================================================================================================
@@ -165,4 +160,3 @@ def guardar_items(request):
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
     
 #===========================================================================================================================
->>>>>>> Stashed changes
