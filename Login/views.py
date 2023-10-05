@@ -76,12 +76,9 @@ class vistaOrden(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
     template_name = 'orden/vista_orden.html'
 
-    def post(self, request, id_orden):
-        
-        detalle = detalle_orden.objects.filter(orden=id_orden)
-        #visOrden = detalle_orden.objects.all()
-
-        return render(request, 'vista_orden.html', { 'detalles': detalle})
+    def get(self, request, *args, **kwargs):
+        detalle = detalle_orden.objects.all() 
+        return render(request, 'orden/vista_orden.html' , {'detalles': detalle})
     
 #===========================================================================================================================
 # Productos

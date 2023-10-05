@@ -3,7 +3,7 @@
 {% block body %}
 <div class="card">
     <div class="card-header">
-        <h2>Detalle de Órdenes</h2>
+        <h2>Ordenes</h2>
         <a class="btn btn-outline-primary" href="{% url 'crear_detalle_orden' %}" role="button">Crear Orden</a>
     </div>
     <br>
@@ -26,7 +26,7 @@
                     <td>{{ orden.receptor }}</td>
                     <td>{{ orden.get_tipo_display }}</td>
                     <td>
-                        <a href="{% url 'vistaOrden' %}" id="" class="btn btn-success" role="button">Ver</a> 
+                        <a href="{% url 'vistaOrden' orden.id %}" id="" class="btn btn-success" role="button">Ver</a> 
                         | 
                         <a href="#2" id="" class="btn btn-primary" role="button">Actualizar</a>
                     </td>

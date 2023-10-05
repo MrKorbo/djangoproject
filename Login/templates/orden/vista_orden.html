@@ -8,6 +8,11 @@
 
 mostrar todos los producto que compartan la misma id de orden-->
 
+<ul>
+    {% for detalle in detalles %}
+        <li>Producto: {{ detalle.producto }} - Cantidad: {{ detalle.cantidad }}</li>
+    {% endfor %}
+</ul>
 
 <div class="card">
     <div class="card-header">
@@ -32,17 +37,17 @@ mostrar todos los producto que compartan la misma id de orden-->
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id Producto</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
                 </tr>
             </thead>  
             <tbody>
+                {% for detalle in detalles %}
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{% detalle.producto %}</td>
+                    <td>{% detalle.cantidad %}</td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

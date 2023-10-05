@@ -15,6 +15,6 @@ urlpatterns = [
     path('mostrar_ordenes/', views.mostrar_ordenes, name='mostrar_ordenes'),
     path('insertarDato/', views.insertar_dato, name='insertarDato'),
     path('guardarItem/', views.guardar_items, name='guardarItem'),
-    path('vistaOrden/', views.vistaOrden.as_view(), name='vistaOrden'),
+    path('vistaOrden/<int:id>', views.vistaOrden.as_view(), name='vistaOrden'),
 
 ]
