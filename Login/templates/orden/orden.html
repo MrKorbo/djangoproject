@@ -17,7 +17,7 @@
                     <th>Tipo</th>
                     <th>Accion</th>
                 </tr>
-            </thead>
+            </thead> 
             <tbody>
                 {% for orden in mostrarOrdenes %}
                 <tr>
@@ -26,9 +26,11 @@
                     <td>{{ orden.receptor }}</td>
                     <td>{{ orden.get_tipo_display }}</td>
                     <td>
-                        <a href="{% url 'vistaOrden' orden.id %}" id="" class="btn btn-success" role="button">Ver</a> 
+                        
+                        <a href="{% url 'vista_orden' orden.id %}" id="" class="btn btn-success" role="button">Ver</a> 
                         | 
                         <a href="#2" id="" class="btn btn-primary" role="button">Actualizar</a>
+                        
                     </td>
                 </tr>
                 {% endfor %}

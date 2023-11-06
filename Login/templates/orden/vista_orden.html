@@ -8,12 +8,6 @@
 
 mostrar todos los producto que compartan la misma id de orden-->
 
-<ul>
-    {% for detalle in detalles %}
-        <li>Producto: {{ detalle.producto }} - Cantidad: {{ detalle.cantidad }}</li>
-    {% endfor %}
-</ul>
-
 <div class="card">
     <div class="card-header">
         <div class="container overflow-hidden">
@@ -27,26 +21,28 @@ mostrar todos los producto que compartan la misma id de orden-->
                 </div>
                 <div class="col text-center">
                     <div>
-                        Fecha
+                        <p>Fecha : {{ orden.fecha|date:"F j, Y" }}</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
     <div class="card-body">
         <table class="table">
             <thead>
                 <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
+                    <th>Orden</th>
                 </tr>
-            </thead>  
+            </thead>
             <tbody>
                 {% for detalle in detalles %}
-                <tr>
-                    <td>{% detalle.producto %}</td>
-                    <td>{% detalle.cantidad %}</td>
-                </tr>
+                    <tr>
+                        <td>{{ detalle.producto }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>{{ detalle.orden }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -76,9 +76,11 @@ class vistaOrden(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
     template_name = 'orden/vista_orden.html'
 
-    def get(self, request, *args, **kwargs):
-        detalle = detalle_orden.objects.all() 
+    def get(self, request, *args, orden_id, **kwargs):
+        detalle = detalle_orden.objects.filter(orden=orden_id)
+        
         return render(request, 'orden/vista_orden.html' , {'detalles': detalle})
+
     
 #===========================================================================================================================
 # Productos
@@ -154,6 +156,6 @@ def guardar_items(request):
         
         return JsonResponse({'mensaje': 'Datos guardados correctamente'})
     
-    return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
+    return render(request, 'orden/orden.html')
     
 #===========================================================================================================================
